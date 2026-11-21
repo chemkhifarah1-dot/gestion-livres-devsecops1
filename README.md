@@ -50,7 +50,39 @@ Pages principales : /livres, /auteurs, /emprunts
 
 - [x] Phase 1 : developpement et tests unitaires
 - [x] Phase 2 : Git et GitHub
-- [ ] Phase 3 : conteneurisation Docker
+- [x] Phase 3 : conteneurisation Docker
 - [ ] Phase 4 : deploiement Kubernetes (Minikube)
 - [ ] Phase 5 : pipeline Jenkins
 - [ ] Phase 6 : securite (SonarQube, Dependency-Check, Trivy, OWASP ZAP)
+
+## Docker
+
+Prerequis : Docker installe, jar construit avec Maven.
+
+Construire l'image :
+
+    mvn clean package
+    docker build -t gestion-livres:1.0 .
+
+Lancer le conteneur (test local, MySQL sur la machine hote) :
+
+    docker run -d --name gestion-livres --network host gestion-livres:1.0
+
+Verifier le fonctionnement :
+
+    docker ps
+    docker logs gestion-livres
+    curl http://localhost:8080/livres
+    docker exec gestion-livres whoami
+
+Arreter et supprimer le conteneur :
+
+    docker stop gestion-livres
+    docker rm gestion-livres
+
+Choix de securite :
+
+- Image de base officielle eclipse-temurin 17 JRE (variante alpine, legere)
+- L'application s'execute avec un utilisateur non-root (spring)
+- Fichier .dockerignore : seul le jar est envoye a Docker
+- Le conteneur ecoute sur le port 8080 (variable SERVER_PORT)
