@@ -34,7 +34,21 @@ pipeline {
                 }
             }
         }
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh 'mvn -B sonar:sonar -Dsonar.projectKey=gestion-livres -Dsonar.projectName=gestion-livres'
+                }
+            }
+        }
 
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
         stage('Docker Build') {
             steps {
                 sh 'docker build -t ${IMAGE}:${BUILD_NUMBER} .'
