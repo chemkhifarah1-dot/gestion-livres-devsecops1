@@ -37,8 +37,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonarqube') {
-                    sh 'mvn -B sonar:sonar -Dsonar.projectKey=gestion-livres -Dsonar.projectName=gestion-livres'
-                }
+                    sh 'mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar -Dsonar.projectKey=gestion-livres -Dsonar.projectName=gestion-livres'
+               }
             }
         }
 
